@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace IdentityServerAspNetIdentity.Pages.Account.Register
+{
+    public class RegisterModel
+    {
+        [Required]
+        public string UserName {get;set;}
+        [Required]
+        public string Password {get;set;}
+        [Required]
+        public string email {get;set;}
+        [Required]
+        public string FullName {get;set;}
+        public string? returnUrl {get;set;}
+        public string? button {get;set;}
+    }
+}

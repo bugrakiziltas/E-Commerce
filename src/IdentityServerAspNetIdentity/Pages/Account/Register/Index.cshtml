@@ -1,0 +1,57 @@
+@page
+@model IdentityServerAspNetIdentity.Pages.Account.Register.Index
+
+<div>
+    <partial name="_ValidationSummary" />
+    <div class="row">
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Register</h2>
+            </div>
+        <div class="card-body">
+            <form asp-page="/Account/Register/Index">
+                <input type="hidden" asp-for="Input.returnUrl">
+                <div class="form-group">
+                    <label asp-for="Input.UserName"></label>
+                        <input class="form-control" placeholder="Username" asp-for="Input.UserName" autofocus>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.email"></label>
+                        <input class="form-control" placeholder="email" asp-for="Input.email" autofocus>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.FullName"></label>
+                        <input class="form-control" placeholder="FullName" asp-for="Input.FullName" autofocus>
+                </div>
+                <div class="form-group">
+                     <label asp-for="Input.Password"></label>
+                        <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
+                </div>
+                <a class="btn btn-secondary" asp-page="../Login/Index" asp-route-returnUrl="@Model.Input.returnUrl">
+                                If you have an account, login here
+                            </a>
+                <button class="btn btn-primary" name="Input.Button" value="Register">Register</button>
+                <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
+            </form>
+        </div>
+        </div>
+        @if(Model.PasswordErrorExists)
+        {
+            <div class="alert alert-failure">
+                <ul>
+                @foreach(var error in Model.PasswordErrors)
+                {
+                    <li>@error</li>
+                }
+                </ul>
+            </div>
+        }
+        @if(Model.RegisterSuccess)
+        {
+            <div class="alert alert-success">
+                You have registered, you can now login
+            </div>
+        }
+    </div>
+</div>
