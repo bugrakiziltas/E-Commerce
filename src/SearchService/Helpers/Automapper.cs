@@ -12,9 +12,9 @@ namespace SearchService.Helpers
     {
         public Automapper()
         {
-            CreateMap<ProductCreated,Product>().ReverseMap();
-            CreateMap<ProductUpdated,Product>().ReverseMap();
-            CreateMap<ProductDeleted,Product>().ReverseMap();
+            CreateMap<ProductCreated,SearchService.Models.Product>().ReverseMap();
+            CreateMap<ProductUpdated,SearchService.Models.Product>().ReverseMap();
+            CreateMap<ProductDeleted,SearchService.Models.Product>().ReverseMap();
         }
     }
 }

@@ -47,6 +47,14 @@ namespace ShoppingCartService.Controllers
             var items=_shoppingCartRepository.GetShoppingCartProducts(userId);
             return Ok(items);
         }
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteFromShoppingCart([FromQuery]int id)
+        {
+            var deletedShoppingCartItem=_shoppingCartRepository.DeleteFromShoppingCart(id);
+            if(deletedShoppingCartItem==null) return BadRequest("Something went wrong");
+            return Ok(deletedShoppingCartItem);
+        }
         [HttpPost]
         [Route("complete")]
         public async Task<IActionResult> CompleteOrder()

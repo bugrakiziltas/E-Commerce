@@ -38,6 +38,14 @@ namespace ShoppingCartService.Service.Repositories
         {
             return await _context.ShoppingCartItems.Include("Product").Where(x=>x.UserId==userId).Select(x=>x.Product).ToListAsync();
         }
+        public async Task<ShoppingCartItem> DeleteFromShoppingCart(int id)
+        {
+            var shoppingCartItem=await _context.ShoppingCartItems.FirstOrDefaultAsync(x=>x.Id==id);
+            if(shoppingCartItem==null) return null;
+            _context.ShoppingCartItems.Remove(shoppingCartItem);
+            if(await _context.SaveChangesAsync()>0) return shoppingCartItem;
+            return null;
+        }
         public async Task<StripeResponse> CompleteOrder(orderRequest request)
         {
             var response=await _httpClient.PostAsJsonAsync($"{_configuration["StripeUrl"]}/api/Checkout",request);

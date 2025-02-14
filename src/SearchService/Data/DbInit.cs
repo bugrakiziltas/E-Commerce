@@ -24,8 +24,24 @@ namespace SearchService.Data
             var options=new JsonSerializerOptions{
                 PropertyNameCaseInsensitive=true
             };
-            var products=JsonSerializer.Deserialize<List<Product>>(productData,options);
+            var productsWithIds=JsonSerializer.Deserialize<List<ProductWithId>>(productData,options);
+            var products=new List<Product>();
+            foreach(var productWithId in productsWithIds)
+            {
+                products.Add(new Product{
+                    ID=productWithId.ProductId.ToString(),
+                    Name=productWithId.Name,
+                    Price=productWithId.Price,
+                    ImageUrl=productWithId.ImageUrl
+                });
+            }
             await DB.SaveAsync(products);
         }
+    }
+    public class ProductWithId{
+        public int ProductId {get;set;}
+        public string Name {get;set;}
+        public decimal Price {get;set;}
+        public string ImageUrl {get;set;}
     }
 }

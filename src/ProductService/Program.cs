@@ -24,13 +24,18 @@ builder.Services.AddMassTransit(x=>{
         o.QueryDelay=TimeSpan.FromSeconds(10);
     });
     x.UsingRabbitMq((context,cfg)=>{
+        // This is for docker 
+        cfg.Host(builder.Configuration["Rabbitmq:Host"],"/", host=>{
+            host.Username(builder.Configuration.GetValue("Rabbitmq:Username","guest"));
+            host.Username(builder.Configuration.GetValue("Rabbitmq:Password","guest"));
+        });
         cfg.ConfigureEndpoints(context);
     });
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options=>{
-    options.Authority=builder.Configuration["Url"];
+    options.Authority=builder.Configuration["IdentityUrl"];
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
     options.TokenValidationParameters.NameClaimType="name";
@@ -42,7 +47,6 @@ builder.Services.AddAuthorization(options =>
         options.AddPolicy("Admin",
             authBuilder =>
             {
-                authBuilder.RequireClaim("scope","productService");
                 authBuilder.RequireRole("Admin");
             });
 
@@ -60,7 +64,8 @@ try{
      logger.LogError(ex, "An error occured during migration");
 }
 
-app.MapControllers();
+
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 app.Run();

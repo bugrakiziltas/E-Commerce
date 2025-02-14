@@ -7,9 +7,11 @@ namespace OrderService.Models.RequestModel
 {
     public class OrderRequest
     {
-        public List<int> productIds {get;set;}
+        public List<ProductRequest> productRequests {get;set;}
         public string userId {get;set;}
         public string email {get;set;}
         public string username {get;set;}
+        public string PaymentIntentId {get;set;}
+
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Contracts;
 using MassTransit;
@@ -20,13 +21,19 @@ namespace OrderService.Consumers
         }
         public async Task Consume(ConsumeContext<OrderCreated> context)
         {
-            var order=new OrderRequest{
-                productIds=context.Message.productIds,
+            var orderRequest=new OrderRequest{
                 userId=context.Message.userId,
                 email=context.Message.email,
-                username=context.Message.username
+                username=context.Message.username,
+                PaymentIntentId=context.Message.PaymentIntentId,
+                productRequests=context.Message.products.Select(x=>new ProductRequest{
+                    Id=x.Id,
+                    Name=x.Name,
+                    Price=x.Price,
+                    ImageUrl=x.ImageUrl,
+                }).ToList()
             };
-            var response=await _orderRepository.AddOrder(order);
+            await _orderRepository.AddOrder(orderRequest);
         }
     }
 }

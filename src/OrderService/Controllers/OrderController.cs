@@ -17,12 +17,5 @@ namespace OrderService.Controllers
         {
             this.orderRepository=orderRepository;
         }
-        [HttpPost]
-        [Route("GetProducts")]
-        public async Task<IActionResult> GetProductsOwnedByCustomer([FromBody]CustomerRequest request)
-        {
-            var productIds=await orderRepository.GetProductIdsOwnedByCustomer(request.id);
-            return Ok(productIds);
-        }
     }
 }

@@ -13,5 +13,6 @@ namespace ShoppingCartService.Service.IRepositories
         Task<ShoppingCartItem> AddToShoppingCart(ShoppingCartItem item);
         Task<List<Product>> GetShoppingCartProducts(string userId);
         Task<StripeResponse> CompleteOrder(orderRequest request);
+        Task<ShoppingCartItem> DeleteFromShoppingCart(int id);
     }
 }

@@ -52,14 +52,14 @@ namespace StripeService.Controllers
                 PaymentMethodTypes=new List<string>{"card"},
                 LineItems=lineItems,
                 Mode="payment",
-                SuccessUrl = "https://example.com/success", // Default success URL
+                SuccessUrl = "https://example.com/success?session_id={CHECKOUT_SESSION_ID}", // Default success URL
                 CancelUrl = "https://example.com/cancel",   // Default cancel URL
                 Metadata=new Dictionary<string, string>
                 {
                     {"UserId",request.userId},
                     {"Email",request.email},
                     {"Username",request.username},
-                    {"Products",JsonSerializer.Serialize(request.products.Select(x=>x.Id).ToList())}
+                    {"Products",JsonSerializer.Serialize(request.products)}
                 }
             };
             var service=new Stripe.Checkout.SessionService();
@@ -67,55 +67,111 @@ namespace StripeService.Controllers
             return Ok(new {sessionId=session.Id, checkoutUrl=session.Url});
         }
         
-    [HttpPost]
-    [Route("webhook")]
-    public async Task<IActionResult> Webhook()
-    {
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-        try
+        [HttpPost]
+        [Route("confirm")]
+        public async Task<IActionResult> ConfirmPayment([FromBody] ConfirmRequest request)
         {
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                stripeSettings.WHSecret,
-                throwOnApiVersionMismatch:false
-            );
-            if (stripeEvent.Type=="checkout.session.completed")
+            var sessionService = new Stripe.Checkout.SessionService();
+            var session = await sessionService.GetAsync(request.sessionId);
+
+            if (session.PaymentStatus == "paid")
             {
-                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-                await HandleCompletedCheckoutSession(session);
+                var products = session.Metadata["Products"];
+                var order = new OrderCreated
+                {
+                    userId = session.Metadata["UserId"],
+                    email = session.Metadata["Email"],
+                    username = session.Metadata["Username"],
+                    products = JsonSerializer.Deserialize<List<Contracts.Product>>(products),
+                    PaymentIntentId = session.PaymentIntentId
+                };
+
+                await _publishEndpoint.Publish(order);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Payment confirmed and order processed successfully." });
             }
-            else
-            {
-                Console.WriteLine($"Unhandled event type: {stripeEvent.Type}");
-            }              
-            return Ok();
-        }
-        catch (StripeException e)
-        {
-            var error=e.StripeError.Message;
-            Console.WriteLine(e.StripeError.Message);
-            return BadRequest();
-        }
-    }
 
-    private async Task HandleCompletedCheckoutSession(Stripe.Checkout.Session session)
-    {
-        var service = new PaymentIntentService();
-        var paymentIntent = await service.GetAsync(session.PaymentIntentId);
+    return BadRequest(new { error = "Payment not completed" });
+}    
+    // [HttpPost]
+    // [Route("webhook")]
+    // public async Task<IActionResult> Webhook()
+    // {
+    //     var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+    //     try
+    //     {
+    //         var stripeEvent = EventUtility.ConstructEvent(
+    //             json,
+    //             Request.Headers["Stripe-Signature"],
+    //             stripeSettings.WHSecret,
+    //             throwOnApiVersionMismatch:false
+    //         );
+    //         if (stripeEvent.Type=="checkout.session.completed")
+    //         {
+    //             var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+    //             await HandleCompletedCheckoutSession(session);
+    //         }
+    //         else
+    //         {
+    //             Console.WriteLine($"Unhandled event type: {stripeEvent.Type}");
+    //         }              
+    //         return Ok();
+    //     }
+    //     catch (StripeException e)
+    //     {
+    //         var error=e.StripeError.Message;
+    //         Console.WriteLine(e.StripeError.Message);
+    //         return BadRequest();
+    //     }
+    // }
 
-        if (paymentIntent.Status == "succeeded")
-        {
-            var productIdsJson=session.Metadata["Products"];
-            var order=new OrderCreated{
-                userId=session.Metadata["UserId"],
-                email=session.Metadata["Email"],
-                username=session.Metadata["Username"],
-                productIds=JsonSerializer.Deserialize<List<int>>(productIdsJson)
-            };
-            await _publishEndpoint.Publish(order);
-            await _context.SaveChangesAsync();
-        }
-    }
-    }
+    // private async Task HandleCompletedCheckoutSession(Stripe.Checkout.Session session)
+    // {
+    //     var service = new PaymentIntentService();
+    //     var paymentIntent = await service.GetAsync(session.PaymentIntentId);
+
+    //     if (paymentIntent.Status == "succeeded")
+    //     {
+    //         var products=session.Metadata["Products"];
+    //         var order=new OrderCreated{
+    //             userId=session.Metadata["UserId"],
+    //             email=session.Metadata["Email"],
+    //             username=session.Metadata["Username"],
+    //             products=JsonSerializer.Deserialize<List<Contracts.Product>>(products),
+    //             PaymentIntentId=session.PaymentIntentId
+    //         };
+            
+    //         await _publishEndpoint.Publish(order);
+    //         await _context.SaveChangesAsync();
+    //     }
+    // }
+    
+    // [HttpPost]
+    // [Route("refund")]
+    // public async Task<IActionResult> Refund(RefundRequest request)
+    // {
+    //     try{
+    //         var refundService=new RefundService();
+    //         var refundOptions=new RefundCreateOptions
+    //         {
+    //             PaymentIntent=request.PaymentIntentId,
+    //             Amount=request.Amount,
+    //             Metadata=new Dictionary<string, string>
+    //             {
+    //                 {"UserId",request.userId},
+    //                 {"Email",request.email},
+    //                 {"Username",request.username},
+    //                 {"Product",JsonSerializer.Serialize(request.product)}
+    //             }
+    //         };
+    //         var refund=await refundService.CreateAsync(refundOptions);
+    //         return Ok( new{refundId=refund.Id, status=refund.Status});
+    //     }
+    //     catch(StripeException e)
+    //     {
+    //         return BadRequest($"Refund Failed with the error: {e.StripeError.Message}");
+    //     }
+    // }
+}
 }

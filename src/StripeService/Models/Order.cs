@@ -11,5 +11,6 @@ namespace StripeService.Models
         public string email {get;set;}
         public string username {get;set;}
         public List<int> productIds {get;set;}
+        public string PaymentIntentId{get;set;}
     }
 }

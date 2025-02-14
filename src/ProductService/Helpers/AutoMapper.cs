@@ -14,10 +14,10 @@ namespace ProductService.Helpers
     {
         public AutoMapper()
         {
-            CreateMap<Product,ProductCreated>().ReverseMap();
-            CreateMap<Product,ProductUpdated>().ReverseMap();
-            CreateMap<Product,ProductDeleted>().ReverseMap();
-            CreateMap<CreateProductResponse,Product>().ReverseMap();
+            CreateMap<Models.Entities.Product,ProductCreated>().ReverseMap();
+            CreateMap<Models.Entities.Product,ProductUpdated>().ReverseMap();
+            CreateMap<Models.Entities.Product,ProductDeleted>().ReverseMap();
+            CreateMap<CreateProductResponse,Models.Entities.Product>().ReverseMap();
         }
     }
 }

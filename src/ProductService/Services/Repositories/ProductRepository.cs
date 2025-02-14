@@ -31,7 +31,7 @@ namespace ProductService.Services.Repositories
 
     try
     {
-        var product = new Product
+        var product = new Models.Entities.Product
         {
             Name = requestModel.Name,
             Price = requestModel.Price,
@@ -56,14 +56,14 @@ namespace ProductService.Services.Repositories
     }
         }
 
-        public async Task DeleteProduct(Product product)
+        public async Task DeleteProduct(Models.Entities.Product product)
         {
             _context.Products.Remove(product);
             await _publishEndpoint.Publish(mapper.Map<ProductDeleted>(product));
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Product> GetProductById(int id)
+        public async Task<Models.Entities.Product> GetProductById(int id)
         {
             var product=await _context.Products.FirstOrDefaultAsync(x=>x.Id==id);
             if(product==null){
@@ -77,7 +77,7 @@ namespace ProductService.Services.Repositories
             return await _context.Products.Where(x=>ids.Contains(x.Id)).Select(x=>x.Name).ToListAsync();
         }
 
-        public async Task<Product> UpdateProduct(UpdateProductRequest requestModel)
+        public async Task<Models.Entities.Product> UpdateProduct(UpdateProductRequest requestModel)
         {
             var product=await _context.Products.FirstOrDefaultAsync(x=>x.Id==requestModel.Id);
             if(product==null){

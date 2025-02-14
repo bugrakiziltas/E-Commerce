@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OrderService.Data;
@@ -11,9 +12,11 @@ using OrderService.Data;
 namespace OrderService.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class OrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209175140_productadded")]
+    partial class productadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,30 +24,6 @@ namespace OrderService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("OrderService.Models.BuyedProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BuyedProducts");
-                });
 
             modelBuilder.Entity("OrderService.Models.Order", b =>
                 {
@@ -79,51 +58,52 @@ namespace OrderService.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OrderService.Models.OrderBuyedProduct", b =>
+            modelBuilder.Entity("OrderService.Models.Product", b =>
                 {
-                    b.Property<int>("orderId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("buyedProductId")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("isDownloaded")
                         .HasColumnType("boolean");
 
-                    b.HasKey("orderId", "buyedProductId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("buyedProductId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("OrderBuyedProducts");
+                    b.ToTable("BuyedProducts");
                 });
 
-            modelBuilder.Entity("OrderService.Models.OrderBuyedProduct", b =>
+            modelBuilder.Entity("OrderService.Models.Product", b =>
                 {
-                    b.HasOne("OrderService.Models.BuyedProduct", "buyedProduct")
-                        .WithMany("orderBuyedProducts")
-                        .HasForeignKey("buyedProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("OrderService.Models.Order", "order")
-                        .WithMany("orderBuyedProducts")
-                        .HasForeignKey("orderId")
+                        .WithMany("products")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("buyedProduct");
 
                     b.Navigation("order");
                 });
 
-            modelBuilder.Entity("OrderService.Models.BuyedProduct", b =>
-                {
-                    b.Navigation("orderBuyedProducts");
-                });
-
             modelBuilder.Entity("OrderService.Models.Order", b =>
                 {
-                    b.Navigation("orderBuyedProducts");
+                    b.Navigation("products");
                 });
 #pragma warning restore 612, 618
         }

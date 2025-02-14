@@ -19,7 +19,7 @@ namespace SearchService.Consumers
         }
         public async Task Consume(ConsumeContext<ProductUpdated> context)
         {
-            var product=_mapper.Map<Product>(context.Message);
+            var product=_mapper.Map<SearchService.Models.Product>(context.Message);
             await product.SaveAsync();
         }
     }

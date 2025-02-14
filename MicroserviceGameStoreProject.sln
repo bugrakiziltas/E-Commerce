@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartService", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeService", "src\StripeService\StripeService.csproj", "{31BAFE41-8F02-4AB9-910F-2C65C0430FDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerAspNetIdentity", "src\Identityserveraspnetidentity\IdentityServerAspNetIdentity.csproj", "{4DBC05A0-A274-4D90-929C-314553720CA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerAspNetIdentity", "src\IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj", "{4DBC05A0-A274-4D90-929C-314553720CA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "src\Gateway\Gateway.csproj", "{38BA7DA1-7F55-4294-B70F-C467A8AD5C1F}"
 EndProject

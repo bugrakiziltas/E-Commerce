@@ -38,7 +38,6 @@ namespace ProductService.Controllers
         [Route("create")]
         public async Task<IActionResult> CreateProduct([FromBody]CreateProductRequest requestModel)
         {
-            var userid=User.FindFirst(ClaimTypes.Role);
             var productDTO=await _productRepository.CreateProduct(requestModel);
             if(productDTO==null){
                 return BadRequest("An error occured while creating the product, debug for further knowledge");

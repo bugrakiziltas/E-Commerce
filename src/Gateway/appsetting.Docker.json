@@ -1,0 +1,35 @@
+{
+    "Logging": {
+      "LogLevel": {
+        "Default": "Information",
+        "Microsoft.AspNetCore": "Warning"
+      }
+    },
+    "Role":"http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+    "Url":"identity-svc",
+    "ReverseProxy":{
+      "Clusters":{
+        "product-cluster":{
+          "Destinations":{
+            "destination1":{
+              "Address":"http://product-svc"
+            }
+          }
+        },
+        "search-cluster":{
+          "Destinations":{
+            "destination1":{
+              "Address":"http://search-svc"
+            }
+          }
+        },
+        "shoppingcart-cluster":{
+          "Destinations":{
+            "destination1":{
+              "Address":"http://shoppingcart-svc"
+            }
+          }
+        }
+      }
+    }
+  }

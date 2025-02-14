@@ -1,29 +1,35 @@
 [{
+    "ProductId":1,
     "Name":"Red Dead Redemption 2",
     "Price":200,
     "ImageUrl":"https://www.freepik.com/premium-ai-image/red-dead-redemption-2-sunset-silhouette_293762113.htm#query=red%20dead%20redemption%202&position=15&from_view=keyword&track=ais_hybrid&uuid=054b5cd5-a72c-4ab5-b2ef-9deebc54a008"
 },
 {
+    "ProductId":2,
     "Name":"The Witcher 3",
     "Price":150,
     "ImageUrl":"https://www.freepik.com/premium-photo/witcher-3-game-year-edition_44240526.htm"
 },
 {
+    "ProductId":3,
     "Name":"Ghost Of The Tsushima",
     "Price":100,
     "ImageUrl":"https://www.freepik.com/free-ai-image/full-shot-ninja-wearing-equipment_81007614.htm#page=4&query=ghost%20tsushima%20wallpaper&position=10&from_view=keyword&track=ais_hybrid&uuid=ef94eab5-ba73-4e4a-893b-bd2b3d2b73fe"
 },
 {
+    "ProductId":4,
     "Name":"Batman Arkham Knight",
     "Price":100,
     "ImageUrl":"https://www.freepik.com/premium-ai-image/portrait-batman-isolated-black-background_247606772.htm#fromView=search&page=1&position=29&uuid=37deace5-5f8f-4726-9e57-4350dddf33be"
 },
 {
+    "ProductId":5,
     "Name":"GTA V",
     "Price":100,
     "ImageUrl":"https://www.freepik.com/free-ai-image/hawaii-illustration-retro-comic-style_281392966.htm#fromView=search&page=1&position=2&uuid=da1c819f-3420-4c87-a607-7adc8f4f1e31"
 },
 {
+    "ProductId":6,
     "Name":"Spiderman",
     "Price":50,
     "ImageUrl":"https://www.freepik.com/premium-ai-image/spiderman-heroic-pose-with-webs-action_286732264.htm#fromView=search&page=1&position=9&uuid=04a7593b-836d-49fd-ae2a-5acd872107c5"
